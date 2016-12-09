@@ -1,5 +1,6 @@
 NGINX_VERSION := 1.11.6
 LIBRESSL_VERSION := 2.5.0
+RPM_RELEASE := 2
 
 NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7.ngx.src.rpm
 LIBRESSL_ARCHIVE := libressl-$(LIBRESSL_VERSION).tar.gz
@@ -24,12 +25,13 @@ archives/$(LIBRESSL_ARCHIVE):
 	curl -sL $(LIBRESSL_ARCHIVE_URL) -o $@
 
 patches/nginx-spec.patch: patches/nginx-spec.patch.in
-	sed 's%<<LIBRESSL_PATH>>%/home/builder/libressl-$(LIBRESSL_VERSION)%' < $< > $@
+	cat $< | \
+		sed 's%<<LIBRESSL_PATH>>%/home/builder/libressl-$(LIBRESSL_VERSION)%' | \
+		sed 's%<<RPM_RELEASE>>%$(RPM_RELEASE)%' > $@
 
 %.build: archives/$(NGINX_SRPM) archives/$(LIBRESSL_ARCHIVE) patches/nginx-spec.patch
 	[ -d $@.bak ] && rm -rf $@.bak || :
 	[ -d $@ ] && mv $@ $@.bak || :
-	# cp Dockerfile.$* Dockerfile
 	docker build -t $(IMAGE_NAME) \
 		--build-arg=NGINX_VERSION=$(NGINX_VERSION) \
 		--build-arg=NGINX_SRPM=$(NGINX_SRPM) \

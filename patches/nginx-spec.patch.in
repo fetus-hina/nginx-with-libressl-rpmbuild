@@ -1,5 +1,5 @@
---- nginx.spec.orig	2016-12-09 21:58:41.030664344 +0900
-+++ nginx.spec	2016-12-09 22:00:31.580673442 +0900
+--- nginx.spec.orig     2016-12-09 21:58:41.030664344 +0900
++++ nginx.spec  2016-12-09 22:46:42.981843241 +0900
 @@ -12,8 +12,6 @@
  Requires(pre): shadow-utils
  Requires: initscripts >= 8.36
@@ -7,7 +7,7 @@
 -Requires: openssl
 -BuildRequires: openssl-devel
  %endif
- 
+
  %if 0%{?rhel} == 6
 @@ -21,8 +19,6 @@
  Requires(pre): shadow-utils
@@ -16,7 +16,7 @@
 -Requires: openssl >= 1.0.1
 -BuildRequires: openssl-devel >= 1.0.1
  %endif
- 
+
  %if 0%{?rhel} == 7
 @@ -31,9 +27,7 @@
  Epoch: %{epoch}
@@ -26,16 +26,24 @@
  BuildRequires: systemd
 -BuildRequires: openssl-devel >= 1.0.1
  %endif
- 
+
  %if 0%{?suse_version} == 1315
-@@ -41,7 +35,6 @@
+@@ -41,14 +35,13 @@
  %define nginx_loggroup trusted
  Requires(pre): shadow
  Requires: systemd
 -BuildRequires: libopenssl-devel
  BuildRequires: systemd
  %endif
- 
+
+ # end of distribution specific definitions
+
+ %define main_version 1.11.6
+-%define main_release 1%{?dist}.ngx
++%define main_release <<RPM_RELEASE>>%{?dist}.ngx
+
+ %define bdir %{_builddir}/%{name}-%{main_version}
+
 @@ -104,12 +97,14 @@
  %build
  ./configure %{BASE_CONFIGURE_ARGS} \
@@ -50,5 +58,6 @@
 +    --with-cc-opt="%{WITH_CC_OPT}" \
 +    --with-openssl="<<LIBRESSL_PATH>>"
  make %{?_smp_mflags}
- 
+
  %install
+
