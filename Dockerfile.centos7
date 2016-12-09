@@ -1,0 +1,29 @@
+FROM centos:7
+MAINTAINER AIZAWA Hina <hina@bouhime.com>
+ARG NGINX_VERSION=FILLME
+ARG NGINX_SRPM=FILLME
+ARG LIBRESSL_VERSION=FILLME
+ARG LIBRESSL_ARCHIVE=FILLME
+ENV HOME /
+RUN yum update -y && \
+    yum install -y \
+        gcc \
+        make \
+        pcre-devel \
+        rpm-build \
+        tar \
+        zlib-devel && \
+    yum clean all && \
+    useradd builder
+USER builder
+WORKDIR /home/builder
+COPY archives/* /home/builder/
+COPY patches/nginx-spec.patch /home/builder/
+ENV HOME /home/builder/
+RUN echo '%dist .el7.jp3cki' >> /home/builder/.rpmmacros && \
+    rpm -Uvh ${NGINX_SRPM} && \
+    tar -zxvf ${LIBRESSL_ARCHIVE} && \
+    patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-spec.patch && \
+    rpmbuild -ba /home/builder/rpmbuild/SPECS/nginx.spec && \
+    tar -czf /tmp/built.tar.gz -C /home/builder/rpmbuild RPMS SRPMS
+CMD ["/bin/true"]
