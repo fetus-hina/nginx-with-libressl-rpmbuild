@@ -1,6 +1,6 @@
-NGINX_VERSION := 1.11.6
+NGINX_VERSION := 1.11.7
 LIBRESSL_VERSION := 2.5.0
-RPM_RELEASE := 2
+RPM_RELEASE := 1
 
 NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7.ngx.src.rpm
 LIBRESSL_ARCHIVE := libressl-$(LIBRESSL_VERSION).tar.gz
@@ -27,6 +27,7 @@ archives/$(LIBRESSL_ARCHIVE):
 patches/nginx-spec.patch: patches/nginx-spec.patch.in
 	cat $< | \
 		sed 's%<<LIBRESSL_PATH>>%/home/builder/libressl-$(LIBRESSL_VERSION)%' | \
+		sed 's%<<NGINX_VERSION>>%$(NGINX_VERSION)%' | \
 		sed 's%<<RPM_RELEASE>>%$(RPM_RELEASE)%' > $@
 
 %.build: archives/$(NGINX_SRPM) archives/$(LIBRESSL_ARCHIVE) patches/nginx-spec.patch
@@ -50,7 +51,7 @@ patches/nginx-spec.patch: patches/nginx-spec.patch.in
 	docker images | grep -q $(IMAGE_NAME) && docker rmi $(IMAGE_NAME) || true
 
 clean:
-	rm -rf *.build.bak *.build tmp
+	rm -rf *.build.bak *.build tmp patches/*.patch
 	docker images | grep -q $(IMAGE_NAME)-ce7 && docker rmi $(IMAGE_NAME)-ce7 || true
 
 dist-clean: clean

@@ -38,7 +38,7 @@
 
  # end of distribution specific definitions
 
- %define main_version 1.11.6
+ %define main_version <<NGINX_VERSION>>
 -%define main_release 1%{?dist}.ngx
 +%define main_release <<RPM_RELEASE>>%{?dist}.ngx
 
