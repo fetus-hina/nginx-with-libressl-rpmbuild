@@ -11,6 +11,8 @@ LIBRESSL_ARCHIVE_URL := http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/$(LIBRESSL_A
 IMAGE_NAME := build-nginx
 TARGZ_FILE := built.tar.gz
 
+PATCH_NAME := nginx-$(NGINX_VERSION)-$(RPM_RELEASE)-with-$(LIBRESSL_VERSION).patch
+
 centos7: IMAGE_NAME := $(IMAGE_NAME)-ce7
 
 .PHONY: all clean dist-clean centos7
@@ -24,13 +26,14 @@ archives/$(NGINX_SRPM):
 archives/$(LIBRESSL_ARCHIVE):
 	curl -sL $(LIBRESSL_ARCHIVE_URL) -o $@
 
-patches/nginx-spec.patch: patches/nginx-spec.patch.in
+patches/$(PATCH_NAME): patches/nginx-spec.patch.in
 	cat $< | \
-		sed 's%<<LIBRESSL_PATH>>%/home/builder/libressl-$(LIBRESSL_VERSION)%' | \
-		sed 's%<<NGINX_VERSION>>%$(NGINX_VERSION)%' | \
-		sed 's%<<RPM_RELEASE>>%$(RPM_RELEASE)%' > $@
+		sed -e 's%<<LIBRESSL_PATH>>%/home/builder/libressl-$(LIBRESSL_VERSION)%' \
+			-e 's%<<NGINX_VERSION>>%$(NGINX_VERSION)%' \
+			-e 's%<<RPM_RELEASE>>%$(RPM_RELEASE)%' \
+		> $@
 
-%.build: archives/$(NGINX_SRPM) archives/$(LIBRESSL_ARCHIVE) patches/nginx-spec.patch
+%.build: archives/$(NGINX_SRPM) archives/$(LIBRESSL_ARCHIVE) patches/$(PATCH_NAME)
 	[ -d $@.bak ] && rm -rf $@.bak || :
 	[ -d $@ ] && mv $@ $@.bak || :
 	docker build -t $(IMAGE_NAME) \
@@ -38,6 +41,7 @@ patches/nginx-spec.patch: patches/nginx-spec.patch.in
 		--build-arg=NGINX_SRPM=$(NGINX_SRPM) \
 		--build-arg=LIBRESSL_VERSION=$(LIBRESSL_VERSION) \
 		--build-arg=LIBRESSL_ARCHIVE=$(LIBRESSL_ARCHIVE) \
+		--build-arg=PATCH_NAME=$(PATCH_NAME) \
 		-f Dockerfile.$* \
 		.
 	docker run --name $(IMAGE_NAME)-tmp $(IMAGE_NAME)
