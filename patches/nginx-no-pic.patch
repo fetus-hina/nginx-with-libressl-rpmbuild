@@ -1,0 +1,9 @@
+--- nginx.spec.bak      2017-01-24 14:50:07.000000000 +0000
++++ nginx.spec  2017-01-25 10:05:29.025349889 +0000
+@@ -53,5 +53,5 @@
+ %define bdir %{_builddir}/%{name}-%{main_version}
+
+-%define WITH_CC_OPT $(echo %{optflags} $(pcre-config --cflags)) -fPIC
++%define WITH_CC_OPT $(echo %{optflags} $(pcre-config --cflags)) -mtune=generic
+ %define WITH_LD_OPT -Wl,-z,relro -Wl,-z,now -pie
+

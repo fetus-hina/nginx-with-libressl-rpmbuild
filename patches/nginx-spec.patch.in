@@ -44,18 +44,18 @@
 
  %define bdir %{_builddir}/%{name}-%{main_version}
 
-@@ -104,12 +97,14 @@
- %build
+@@ -107,13 +101,13 @@
  ./configure %{BASE_CONFIGURE_ARGS} \
      --with-cc-opt="%{WITH_CC_OPT}" \
+-    --with-ld-opt="%{WITH_LD_OPT}" \
 +    --with-openssl="<<LIBRESSL_PATH>>" \
      --with-debug
  make %{?_smp_mflags}
  %{__mv} %{bdir}/objs/nginx \
      %{bdir}/objs/nginx-debug
  ./configure %{BASE_CONFIGURE_ARGS} \
--    --with-cc-opt="%{WITH_CC_OPT}"
-+    --with-cc-opt="%{WITH_CC_OPT}" \
+     --with-cc-opt="%{WITH_CC_OPT}" \
+-    --with-ld-opt="%{WITH_LD_OPT}"
 +    --with-openssl="<<LIBRESSL_PATH>>"
  make %{?_smp_mflags}
 

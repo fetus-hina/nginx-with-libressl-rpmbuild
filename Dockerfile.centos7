@@ -24,6 +24,7 @@ ENV HOME /home/builder/
 RUN echo '%dist .el7.jp3cki' >> /home/builder/.rpmmacros && \
     rpm -Uvh ${NGINX_SRPM} && \
     tar -zxvf ${LIBRESSL_ARCHIVE} && \
+    patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-no-pic.patch && \
     patch -p0 -d /home/builder/rpmbuild/SPECS < ${PATCH_NAME} && \
     rpmbuild -ba /home/builder/rpmbuild/SPECS/nginx.spec && \
     tar -czf /tmp/built.tar.gz -C /home/builder/rpmbuild RPMS SRPMS
