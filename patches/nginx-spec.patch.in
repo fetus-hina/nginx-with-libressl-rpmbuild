@@ -44,10 +44,11 @@
 
  %define bdir %{_builddir}/%{name}-%{main_version}
 
-@@ -107,13 +101,13 @@
+@@ -107,13 +101,15 @@
  ./configure %{BASE_CONFIGURE_ARGS} \
      --with-cc-opt="%{WITH_CC_OPT}" \
 -    --with-ld-opt="%{WITH_LD_OPT}" \
++    --with-ld-opt="-lrt" \
 +    --with-openssl="<<LIBRESSL_PATH>>" \
      --with-debug
  make %{?_smp_mflags}
@@ -56,6 +57,7 @@
  ./configure %{BASE_CONFIGURE_ARGS} \
      --with-cc-opt="%{WITH_CC_OPT}" \
 -    --with-ld-opt="%{WITH_LD_OPT}"
++    --with-ld-opt="-lrt" \
 +    --with-openssl="<<LIBRESSL_PATH>>"
  make %{?_smp_mflags}
 
