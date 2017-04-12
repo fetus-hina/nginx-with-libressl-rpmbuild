@@ -6,7 +6,9 @@ ARG LIBRESSL_VERSION=FILLME
 ARG LIBRESSL_ARCHIVE=FILLME
 ARG PATCH_NAME=FILLME
 ENV HOME /
-RUN yum update -y && \
+COPY centos5/*.repo /tmp
+RUN rm -f /etc/yum.repos.d/*.repo && \
+    mv /tmp/*.repo /etc/yum.repos.d/ && \
     yum install -y \
         gcc44 \
         make \
