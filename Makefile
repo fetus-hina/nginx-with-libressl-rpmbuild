@@ -1,11 +1,14 @@
-NGINX_VERSION := 1.11.13
+# "mainline" or blank
+UPSTREAM_REPO := 
+
+NGINX_VERSION := 1.12.0
 LIBRESSL_VERSION := 2.5.3
-RPM_RELEASE := 2
+RPM_RELEASE := 1
 
 NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7.ngx.src.rpm
 LIBRESSL_ARCHIVE := libressl-$(LIBRESSL_VERSION).tar.gz
 
-NGINX_SRPM_URL := https://nginx.org/packages/mainline/centos/7/SRPMS/$(NGINX_SRPM)
+NGINX_SRPM_URL := https://nginx.org/packages/$(UPSTREAM_REPO)/centos/7/SRPMS/$(NGINX_SRPM)
 LIBRESSL_ARCHIVE_URL := http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/$(LIBRESSL_ARCHIVE)
 
 IMAGE_NAME := build-nginx
