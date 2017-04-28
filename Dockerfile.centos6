@@ -27,6 +27,7 @@ ENV HOME /home/builder/
 RUN echo '%dist .el6.jp3cki' >> /home/builder/.rpmmacros && \
     rpm -Uvh ${NGINX_SRPM} && \
     tar -zxvf ${LIBRESSL_ARCHIVE} && \
+    patch -p4 -d /home/builder/libressl-${LIBRESSL_VERSION}/crypto -R < libressl-ddd98f8ea741a122952185a36c1396c14c2fda74.patch && \
     patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-no-pic.patch && \
     patch -p0 -d /home/builder/rpmbuild/SPECS < ${PATCH_NAME} && \
     scl enable devtoolset-6 'rpmbuild -ba /home/builder/rpmbuild/SPECS/nginx.spec' && \
