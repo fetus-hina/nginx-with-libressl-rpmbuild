@@ -29,7 +29,6 @@ ENV HOME /home/builder
 RUN echo '%dist .el5.jp3cki' >> /home/builder/.rpmmacros && \
     rpm -Uvh --nosignature --nomd5 ${NGINX_SRPM} && \
     tar -zxvf ${LIBRESSL_ARCHIVE} && \
-    patch -p4 -d /home/builder/libressl-${LIBRESSL_VERSION}/crypto -R < libressl-ddd98f8ea741a122952185a36c1396c14c2fda74.patch && \
     patch -p0 -d /usr/src/redhat/SPECS < nginx-no-pic.patch && \
     patch -p0 -d /usr/src/redhat/SPECS < ${PATCH_NAME} && \
     rpmbuild -ba /usr/src/redhat/SPECS/nginx.spec && \
