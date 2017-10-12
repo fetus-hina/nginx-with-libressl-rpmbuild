@@ -28,9 +28,11 @@ USER root
 ENV HOME /home/builder
 RUN echo '%dist .el5.jp3cki' >> /home/builder/.rpmmacros && \
     rpm -Uvh --nosignature --nomd5 ${NGINX_SRPM} && \
-    tar -zxvf ${LIBRESSL_ARCHIVE} && \
-    patch -p0 -d /usr/src/redhat/SPECS < nginx-no-pic.patch && \
-    patch -p0 -d /usr/src/redhat/SPECS < ${PATCH_NAME} && \
-    rpmbuild -ba /usr/src/redhat/SPECS/nginx.spec && \
+    tar -zxvf ${LIBRESSL_ARCHIVE}
+RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-el5.patch
+RUN patch -p0 -d /usr/src/redhat/SPECS < ${PATCH_NAME}
+RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-spec-pic.patch && \
+    cp /home/builder/nginx-pic.patch /usr/src/redhat/SOURCES
+RUN rpmbuild -ba /usr/src/redhat/SPECS/nginx.spec && \
     tar -czf /tmp/built.tar.gz -C /usr/src/redhat RPMS SRPMS
 CMD ["/bin/true"]

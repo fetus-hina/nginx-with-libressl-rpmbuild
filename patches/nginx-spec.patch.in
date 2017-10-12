@@ -1,5 +1,5 @@
---- nginx.spec.orig     2016-12-09 21:58:41.030664344 +0900
-+++ nginx.spec  2016-12-09 22:46:42.981843241 +0900
+--- nginx.spec
++++ nginx.spec
 @@ -12,8 +12,6 @@
  Requires(pre): shadow-utils
  Requires: initscripts >= 8.36
@@ -18,17 +18,23 @@
  %endif
 
  %if 0%{?rhel} == 7
-@@ -31,9 +27,7 @@
- Epoch: %{epoch}
- Requires(pre): shadow-utils
+@@ -34,15 +30,6 @@
  Requires: systemd
--Requires: openssl >= 1.0.1
  BuildRequires: systemd
+ %define os_minor %(lsb_release -rs | cut -d '.' -f 2)
+-%if %{os_minor} >= 4
+-Requires: openssl >= 1.0.2
+-BuildRequires: openssl-devel >= 1.0.2
+-%define dist .el7_4
+-%else
+-Requires: openssl >= 1.0.1
 -BuildRequires: openssl-devel >= 1.0.1
+-%define dist .el7
+-%endif
  %endif
 
  %if 0%{?suse_version} == 1315
-@@ -41,14 +35,13 @@
+@@ -50,13 +37,12 @@
  %define nginx_loggroup trusted
  Requires(pre): shadow
  Requires: systemd
@@ -43,12 +49,11 @@
 +%define main_release <<RPM_RELEASE>>%{?dist}.ngx
 
  %define bdir %{_builddir}/%{name}-%{main_version}
-
-@@ -107,13 +101,15 @@
+@@ -116,13 +103,15 @@
  ./configure %{BASE_CONFIGURE_ARGS} \
      --with-cc-opt="%{WITH_CC_OPT}" \
 -    --with-ld-opt="%{WITH_LD_OPT}" \
-+    --with-ld-opt="-lrt" \
++    --with-ld-opt="%{WITH_LD_OPT} -fPIC -lrt" \
 +    --with-openssl="<<LIBRESSL_PATH>>" \
      --with-debug
  make %{?_smp_mflags}
@@ -57,9 +62,8 @@
  ./configure %{BASE_CONFIGURE_ARGS} \
      --with-cc-opt="%{WITH_CC_OPT}" \
 -    --with-ld-opt="%{WITH_LD_OPT}"
-+    --with-ld-opt="-lrt" \
++    --with-ld-opt="%{WITH_LD_OPT} -fPIC -lrt" \
 +    --with-openssl="<<LIBRESSL_PATH>>"
  make %{?_smp_mflags}
 
  %install
-

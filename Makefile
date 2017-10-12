@@ -1,11 +1,11 @@
 # "mainline" or blank
 UPSTREAM_REPO := mainline
 
-NGINX_VERSION := 1.13.5
-LIBRESSL_VERSION := 2.6.1
+NGINX_VERSION := 1.13.6
+LIBRESSL_VERSION := 2.6.2
 RPM_RELEASE := 1
 
-NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7.ngx.src.rpm
+NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7_4.ngx.src.rpm
 LIBRESSL_ARCHIVE := libressl-$(LIBRESSL_VERSION).tar.gz
 
 NGINX_SRPM_URL := https://nginx.org/packages/$(UPSTREAM_REPO)/centos/7/SRPMS/$(NGINX_SRPM)

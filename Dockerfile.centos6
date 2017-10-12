@@ -8,12 +8,11 @@ ARG PATCH_NAME=FILLME
 ENV HOME /
 RUN yum update -y && \
     yum install -y \
-        centos-release-scl-rh \
-        scl-utils && \
-    yum install -y \
-        devtoolset-6-gcc \
+        gcc \
+        glibc-headers \
         make \
         pcre-devel \
+        redhat-lsb-core \
         rpm-build \
         tar \
         zlib-devel && \
@@ -26,9 +25,11 @@ COPY patches/*.patch /home/builder/
 ENV HOME /home/builder/
 RUN echo '%dist .el6.jp3cki' >> /home/builder/.rpmmacros && \
     rpm -Uvh ${NGINX_SRPM} && \
-    tar -zxvf ${LIBRESSL_ARCHIVE} && \
-    patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-no-pic.patch && \
-    patch -p0 -d /home/builder/rpmbuild/SPECS < ${PATCH_NAME} && \
-    scl enable devtoolset-6 'rpmbuild -ba /home/builder/rpmbuild/SPECS/nginx.spec' && \
+    tar -zxf ${LIBRESSL_ARCHIVE}
+RUN patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-el5.patch
+RUN patch -p0 -d /home/builder/rpmbuild/SPECS < ${PATCH_NAME}
+RUN patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-spec-pic.patch && \
+    cp /home/builder/nginx-pic.patch /home/builder/rpmbuild/SOURCES
+RUN rpmbuild -ba /home/builder/rpmbuild/SPECS/nginx.spec && \
     tar -czf /tmp/built.tar.gz -C /home/builder/rpmbuild RPMS SRPMS
 CMD ["/bin/true"]
