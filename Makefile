@@ -1,7 +1,7 @@
 # "mainline" or blank
 UPSTREAM_REPO := mainline
 
-NGINX_VERSION := 1.13.9
+NGINX_VERSION := 1.13.10
 LIBRESSL_VERSION := 2.6.4
 RPM_RELEASE := 1
 
