@@ -2,19 +2,19 @@
 UPSTREAM_REPO := mainline
 
 NGINX_VERSION := 1.13.10
-LIBRESSL_VERSION := 2.7.1
+OPENSSL_VERSION := 1.1.1-pre3
 RPM_RELEASE := 3
 
 NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7_4.ngx.src.rpm
-LIBRESSL_ARCHIVE := libressl-$(LIBRESSL_VERSION).tar.gz
+OPENSSL_ARCHIVE := openssl-$(OPENSSL_VERSION).tar.gz
 
 NGINX_SRPM_URL := https://nginx.org/packages/$(UPSTREAM_REPO)/centos/7/SRPMS/$(NGINX_SRPM)
-LIBRESSL_ARCHIVE_URL := http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/$(LIBRESSL_ARCHIVE)
+OPENSSL_ARCHIVE_URL := https://www.openssl.org/source/$(OPENSSL_ARCHIVE)
 
 IMAGE_NAME := build-nginx
 TARGZ_FILE := built.tar.gz
 
-PATCH_NAME := nginx-$(NGINX_VERSION)-$(RPM_RELEASE)-with-$(LIBRESSL_VERSION).patch
+PATCH_NAME := nginx-$(NGINX_VERSION)-$(RPM_RELEASE)-with-$(OPENSSL_VERSION).patch
 
 centos7: IMAGE_NAME := $(IMAGE_NAME)-ce7
 centos6: IMAGE_NAME := $(IMAGE_NAME)-ce6
@@ -30,24 +30,24 @@ centos5: centos5.build
 archives/$(NGINX_SRPM):
 	curl -sL $(NGINX_SRPM_URL) -o $@
 
-archives/$(LIBRESSL_ARCHIVE):
-	curl -sL $(LIBRESSL_ARCHIVE_URL) -o $@
+archives/$(OPENSSL_ARCHIVE):
+	curl -sL $(OPENSSL_ARCHIVE_URL) -o $@
 
 patches/$(PATCH_NAME): patches/nginx-spec.patch.in
 	cat $< | \
-		sed -e 's%<<LIBRESSL_PATH>>%/home/builder/libressl-$(LIBRESSL_VERSION)%' \
+		sed -e 's%<<OPENSSL_PATH>>%/home/builder/openssl-$(OPENSSL_VERSION)%' \
 			-e 's%<<NGINX_VERSION>>%$(NGINX_VERSION)%' \
 			-e 's%<<RPM_RELEASE>>%$(RPM_RELEASE)%' \
 		> $@
 
-%.build: archives/$(NGINX_SRPM) archives/$(LIBRESSL_ARCHIVE) patches/$(PATCH_NAME)
+%.build: archives/$(NGINX_SRPM) archives/$(OPENSSL_ARCHIVE) patches/$(PATCH_NAME)
 	[ -d $@.bak ] && rm -rf $@.bak || :
 	[ -d $@ ] && mv $@ $@.bak || :
 	docker build -t $(IMAGE_NAME) \
 		--build-arg=NGINX_VERSION=$(NGINX_VERSION) \
 		--build-arg=NGINX_SRPM=$(NGINX_SRPM) \
-		--build-arg=LIBRESSL_VERSION=$(LIBRESSL_VERSION) \
-		--build-arg=LIBRESSL_ARCHIVE=$(LIBRESSL_ARCHIVE) \
+		--build-arg=OPENSSL_VERSION=$(OPENSSL_VERSION) \
+		--build-arg=OPENSSL_ARCHIVE=$(OPENSSL_ARCHIVE) \
 		--build-arg=PATCH_NAME=$(PATCH_NAME) \
 		-f Dockerfile.$* \
 		.

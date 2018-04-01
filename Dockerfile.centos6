@@ -2,8 +2,8 @@ FROM centos:6
 MAINTAINER AIZAWA Hina <hina@bouhime.com>
 ARG NGINX_VERSION=FILLME
 ARG NGINX_SRPM=FILLME
-ARG LIBRESSL_VERSION=FILLME
-ARG LIBRESSL_ARCHIVE=FILLME
+ARG OPENSSL_VERSION=FILLME
+ARG OPENSSL_ARCHIVE=FILLME
 ARG PATCH_NAME=FILLME
 ENV HOME /
 RUN yum update -y && \
@@ -25,7 +25,7 @@ COPY patches/*.patch /home/builder/
 ENV HOME /home/builder/
 RUN echo '%dist .el6.jp3cki' >> /home/builder/.rpmmacros && \
     rpm -Uvh ${NGINX_SRPM} && \
-    tar -zxf ${LIBRESSL_ARCHIVE}
+    tar -zxf ${OPENSSL_ARCHIVE}
 RUN patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-el5.patch
 RUN patch -p0 -d /home/builder/rpmbuild/SPECS < ${PATCH_NAME}
 RUN patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-spec-pic.patch && \

@@ -54,7 +54,7 @@
      --with-cc-opt="%{WITH_CC_OPT}" \
 -    --with-ld-opt="%{WITH_LD_OPT}" \
 +    --with-ld-opt="%{WITH_LD_OPT} -fPIC -lrt" \
-+    --with-openssl="<<LIBRESSL_PATH>>" \
++    --with-openssl="<<OPENSSL_PATH>>" \
      --with-debug
  make %{?_smp_mflags}
  %{__mv} %{bdir}/objs/nginx \
@@ -63,7 +63,7 @@
      --with-cc-opt="%{WITH_CC_OPT}" \
 -    --with-ld-opt="%{WITH_LD_OPT}"
 +    --with-ld-opt="%{WITH_LD_OPT} -fPIC -lrt" \
-+    --with-openssl="<<LIBRESSL_PATH>>"
++    --with-openssl="<<OPENSSL_PATH>>"
  make %{?_smp_mflags}
 
  %install

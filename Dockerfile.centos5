@@ -2,8 +2,8 @@ FROM centos:5
 MAINTAINER AIZAWA Hina <hina@bouhime.com>
 ARG NGINX_VERSION=FILLME
 ARG NGINX_SRPM=FILLME
-ARG LIBRESSL_VERSION=FILLME
-ARG LIBRESSL_ARCHIVE=FILLME
+ARG OPENSSL_VERSION=FILLME
+ARG OPENSSL_ARCHIVE=FILLME
 ARG PATCH_NAME=FILLME
 ENV HOME /
 COPY centos5/*.repo /tmp
@@ -28,7 +28,7 @@ USER root
 ENV HOME /home/builder
 RUN echo '%dist .el5.jp3cki' >> /home/builder/.rpmmacros && \
     rpm -Uvh --nosignature --nomd5 ${NGINX_SRPM} && \
-    tar -zxvf ${LIBRESSL_ARCHIVE}
+    tar -zxvf ${OPENSSL_ARCHIVE}
 RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-el5.patch
 RUN patch -p0 -d /usr/src/redhat/SPECS < ${PATCH_NAME}
 RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-spec-pic.patch && \
