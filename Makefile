@@ -1,9 +1,9 @@
 # "mainline" or blank
 UPSTREAM_REPO := mainline
 
-NGINX_VERSION := 1.13.10
+NGINX_VERSION := 1.13.11
 OPENSSL_VERSION := 1.1.1-pre3
-RPM_RELEASE := 3
+RPM_RELEASE := 1
 
 NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7_4.ngx.src.rpm
 OPENSSL_ARCHIVE := openssl-$(OPENSSL_VERSION).tar.gz
@@ -18,14 +18,12 @@ PATCH_NAME := nginx-$(NGINX_VERSION)-$(RPM_RELEASE)-with-$(OPENSSL_VERSION).patc
 
 centos7: IMAGE_NAME := $(IMAGE_NAME)-ce7
 centos6: IMAGE_NAME := $(IMAGE_NAME)-ce6
-centos5: IMAGE_NAME := $(IMAGE_NAME)-ce5
 
-.PHONY: all clean dist-clean centos7 centos6 centos5
+.PHONY: all clean dist-clean centos7 centos6
 
-all: centos7 centos6 centos5
+all: centos7 centos6
 centos7: centos7.build
 centos6: centos6.build
-centos5: centos5.build
 
 archives/$(NGINX_SRPM):
 	curl -sL $(NGINX_SRPM_URL) -o $@
