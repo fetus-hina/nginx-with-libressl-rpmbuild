@@ -32,9 +32,7 @@ RUN echo '%dist .el5.jp3cki' >> /home/builder/.rpmmacros && \
 RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-el5.patch
 RUN patch -p0 -d /usr/src/redhat/SPECS < ${PATCH_NAME}
 RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-spec-pic.patch
-RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-spec-for-cab37803ebb3.patch
-RUN cp /home/builder/nginx-pic.patch /usr/src/redhat/SOURCES && \
-    cp /home/builder/nginx-cab37803ebb3.patch /usr/src/redhat/SOURCES
+RUN cp /home/builder/nginx-pic.patch /usr/src/redhat/SOURCES
 RUN rpmbuild -ba /usr/src/redhat/SPECS/nginx.spec && \
     tar -czf /tmp/built.tar.gz -C /usr/src/redhat RPMS SRPMS
 CMD ["/bin/true"]
