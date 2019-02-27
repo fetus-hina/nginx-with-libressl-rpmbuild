@@ -1,8 +1,8 @@
 # "mainline" or blank
 UPSTREAM_REPO := mainline
 
-NGINX_VERSION := 1.15.8
-OPENSSL_VERSION := 1.1.1a
+NGINX_VERSION := 1.15.9
+OPENSSL_VERSION := 1.1.1b
 RPM_RELEASE := 1
 
 NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7_4.ngx.src.rpm
@@ -26,10 +26,10 @@ centos7: centos7.build
 centos6: centos6.build
 
 archives/$(NGINX_SRPM):
-	curl -sL $(NGINX_SRPM_URL) -o $@
+	curl -fsL $(NGINX_SRPM_URL) -o $@
 
 archives/$(OPENSSL_ARCHIVE):
-	curl -sL $(OPENSSL_ARCHIVE_URL) -o $@
+	curl -fsL $(OPENSSL_ARCHIVE_URL) -o $@
 
 patches/$(PATCH_NAME): patches/nginx-spec.patch.in
 	cat $< | \
