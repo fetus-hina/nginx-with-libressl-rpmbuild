@@ -1,7 +1,7 @@
 # "mainline" or blank
 UPSTREAM_REPO := mainline
 
-NGINX_VERSION := 1.15.8
+NGINX_VERSION := 1.15.9
 LIBRESSL_VERSION := 2.8.3
 RPM_RELEASE := 1
 
@@ -28,10 +28,10 @@ centos6: centos6.build
 centos5: centos5.build
 
 archives/$(NGINX_SRPM):
-	curl -sL $(NGINX_SRPM_URL) -o $@
+	curl -fsL $(NGINX_SRPM_URL) -o $@
 
 archives/$(LIBRESSL_ARCHIVE):
-	curl -sL $(LIBRESSL_ARCHIVE_URL) -o $@
+	curl -fsL $(LIBRESSL_ARCHIVE_URL) -o $@
 
 patches/$(PATCH_NAME): patches/nginx-spec.patch.in
 	cat $< | \
