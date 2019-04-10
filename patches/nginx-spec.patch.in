@@ -1,27 +1,19 @@
 --- nginx.spec
 +++ nginx.spec
-@@ -12,8 +12,6 @@
- Requires(pre): shadow-utils
- Requires: initscripts >= 8.36
- Requires(post): chkconfig
--Requires: openssl
--BuildRequires: openssl-devel
- %endif
-
- %if 0%{?rhel} == 6
-@@ -21,8 +19,6 @@
+@@ -19,8 +19,6 @@
  Requires(pre): shadow-utils
  Requires: initscripts >= 8.36
  Requires(post): chkconfig
 -Requires: openssl >= 1.0.1
 -BuildRequires: openssl-devel >= 1.0.1
  %endif
-
+ 
  %if 0%{?rhel} == 7
-@@ -34,15 +30,6 @@
- Requires: systemd
- BuildRequires: systemd
- %define os_minor %(lsb_release -rs | cut -d '.' -f 2)
+@@ -29,29 +27,18 @@
+ %define epoch 1
+ Epoch: %{epoch}
+ Requires(pre): shadow-utils
+-%define os_minor %(lsb_release -rs | cut -d '.' -f 2)
 -%if %{os_minor} >= 4
 -Requires: openssl >= 1.0.2
 -BuildRequires: openssl-devel >= 1.0.2
@@ -32,24 +24,24 @@
 -%define dist .el7
 -%endif
  %endif
-
- %if 0%{?suse_version} == 1315
-@@ -50,13 +37,12 @@
+ 
+ %if 0%{?suse_version} >= 1315
+ %define _group Productivity/Networking/Web/Servers
  %define nginx_loggroup trusted
  Requires(pre): shadow
- Requires: systemd
 -BuildRequires: libopenssl-devel
- BuildRequires: systemd
  %endif
-
+ 
  # end of distribution specific definitions
-
+ 
  %define main_version <<NGINX_VERSION>>
 -%define main_release 1%{?dist}.ngx
 +%define main_release <<RPM_RELEASE>>%{?dist}.ngx
-
+ 
  %define bdir %{_builddir}/%{name}-%{main_version}
-@@ -116,13 +103,15 @@
+ 
+@@ -109,14 +96,16 @@
+ %build
  ./configure %{BASE_CONFIGURE_ARGS} \
      --with-cc-opt="%{WITH_CC_OPT}" \
 -    --with-ld-opt="%{WITH_LD_OPT}" \
@@ -65,5 +57,5 @@
 +    --with-ld-opt="%{WITH_LD_OPT} -fPIC -lrt" \
 +    --with-openssl="<<LIBRESSL_PATH>>"
  make %{?_smp_mflags}
-
+ 
  %install
