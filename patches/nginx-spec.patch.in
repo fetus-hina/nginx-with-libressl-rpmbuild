@@ -29,7 +29,7 @@
  
  %define main_version <<NGINX_VERSION>>
 -%define main_release 1%{?dist}.ngx
-+%define main_release <<RPM_RELEASE>>%{?dist}.ngx
++%define main_release <<RPM_RELEASE>>%{?dist}.jp3cki.ngx
  
  %define bdir %{_builddir}/%{name}-%{main_version}
  
