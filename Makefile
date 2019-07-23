@@ -16,13 +16,15 @@ TARGZ_FILE := built.tar.gz
 
 PATCH_NAME := nginx-$(NGINX_VERSION)-$(RPM_RELEASE)-with-$(LIBRESSL_VERSION).patch
 
-centos7: IMAGE_NAME := $(IMAGE_NAME)-ce7
-centos6: IMAGE_NAME := $(IMAGE_NAME)-ce6
-centos5: IMAGE_NAME := $(IMAGE_NAME)-ce5
+centos8: IMAGE_NAME := $(IMAGE_NAME)-el8
+centos7: IMAGE_NAME := $(IMAGE_NAME)-el7
+centos6: IMAGE_NAME := $(IMAGE_NAME)-el6
+centos5: IMAGE_NAME := $(IMAGE_NAME)-el5
 
 .PHONY: all clean dist-clean centos7 centos6 centos5
 
-all: centos7 centos6 centos5
+all: centos8 centos7 centos6 centos5
+centos8: centos8.build
 centos7: centos7.build
 centos6: centos6.build
 centos5: centos5.build
@@ -63,9 +65,10 @@ patches/$(PATCH_NAME): patches/nginx-spec.patch.in
 
 clean:
 	rm -rf *.build.bak *.build tmp patches/*.patch
-	docker images | grep -q $(IMAGE_NAME)-ce7 && docker rmi $(IMAGE_NAME)-ce7 || true
-	docker images | grep -q $(IMAGE_NAME)-ce6 && docker rmi $(IMAGE_NAME)-ce6 || true
-	docker images | grep -q $(IMAGE_NAME)-ce5 && docker rmi $(IMAGE_NAME)-ce5 || true
+	docker images | grep -q $(IMAGE_NAME)-el8 && docker rmi $(IMAGE_NAME)-el8 || true
+	docker images | grep -q $(IMAGE_NAME)-el7 && docker rmi $(IMAGE_NAME)-el7 || true
+	docker images | grep -q $(IMAGE_NAME)-el6 && docker rmi $(IMAGE_NAME)-el6 || true
+	docker images | grep -q $(IMAGE_NAME)-el5 && docker rmi $(IMAGE_NAME)-el5 || true
 
 dist-clean: clean
 	rm -rf archives/*
