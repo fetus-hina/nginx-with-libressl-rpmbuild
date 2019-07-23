@@ -16,12 +16,14 @@ TARGZ_FILE := built.tar.gz
 
 PATCH_NAME := nginx-$(NGINX_VERSION)-$(RPM_RELEASE)-with-$(OPENSSL_VERSION).patch
 
+centos8: IMAGE_NAME := $(IMAGE_NAME)-ce8
 centos7: IMAGE_NAME := $(IMAGE_NAME)-ce7
 centos6: IMAGE_NAME := $(IMAGE_NAME)-ce6
 
-.PHONY: all clean dist-clean centos7 centos6
+.PHONY: all clean dist-clean centos8 centos7 centos6
 
-all: centos7 centos6
+all: centos8 centos7 centos6
+centos8: centos8.build
 centos7: centos7.build
 centos6: centos6.build
 
@@ -61,6 +63,7 @@ patches/$(PATCH_NAME): patches/nginx-spec.patch.in
 
 clean:
 	rm -rf *.build.bak *.build tmp patches/*.patch
+	docker images | grep -q $(IMAGE_NAME)-ce8 && docker rmi $(IMAGE_NAME)-ce8 || true
 	docker images | grep -q $(IMAGE_NAME)-ce7 && docker rmi $(IMAGE_NAME)-ce7 || true
 	docker images | grep -q $(IMAGE_NAME)-ce6 && docker rmi $(IMAGE_NAME)-ce6 || true
 	docker images | grep -q $(IMAGE_NAME)-ce5 && docker rmi $(IMAGE_NAME)-ce5 || true

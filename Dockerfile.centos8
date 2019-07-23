@@ -1,0 +1,37 @@
+FROM oraclelinux:8
+MAINTAINER AIZAWA Hina <hina@fetus.jp>
+ARG NGINX_VERSION=FILLME
+ARG NGINX_SRPM=FILLME
+ARG OPENSSL_VERSION=FILLME
+ARG OPENSSL_ARCHIVE=FILLME
+ARG PATCH_NAME=FILLME
+ENV HOME /
+RUN yum update -y && \
+    yum install -y \
+        glibc-headers \
+        gcc \
+        make \
+        pcre-devel \
+        perl \
+        redhat-lsb-core \
+        rpm-build \
+        tar \
+        zlib-devel && \
+    yum clean all && \
+    rm -rf /var/cache/yum && \
+    useradd builder
+USER builder
+WORKDIR /home/builder
+COPY archives/* /home/builder/
+COPY patches/*.patch /home/builder/
+ENV HOME /home/builder/
+RUN echo '%dist .el8.ossl.jp3cki' >> /home/builder/.rpmmacros && \
+    rpm -Uvh ${NGINX_SRPM} && \
+    tar -zxvf ${OPENSSL_ARCHIVE}
+RUN patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-el5.patch
+RUN patch -p0 -d /home/builder/rpmbuild/SPECS < ${PATCH_NAME}
+RUN patch -p0 -d /home/builder/rpmbuild/SPECS < nginx-spec-pic.patch && \
+    cp /home/builder/nginx-pic.patch /home/builder/rpmbuild/SOURCES
+RUN rpmbuild -ba /home/builder/rpmbuild/SPECS/nginx.spec && \
+    tar -czf /tmp/built.tar.gz -C /home/builder/rpmbuild RPMS SRPMS
+CMD ["/bin/true"]
