@@ -1,8 +1,8 @@
 # "mainline" or blank
 UPSTREAM_REPO := mainline
 
-NGINX_VERSION := 1.19.4
-LIBRESSL_VERSION := 3.2.2
+NGINX_VERSION := 1.19.6
+LIBRESSL_VERSION := 3.2.3
 RPM_RELEASE := 1
 
 NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7.ngx.src.rpm

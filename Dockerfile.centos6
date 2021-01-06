@@ -6,7 +6,10 @@ ARG LIBRESSL_VERSION=FILLME
 ARG LIBRESSL_ARCHIVE=FILLME
 ARG PATCH_NAME=FILLME
 ENV HOME /
-RUN yum update -y && \
+COPY centos6/*.repo /tmp
+RUN rm -f /etc/yum.repos.d/*.repo && \
+    mv /tmp/*.repo /etc/yum.repos.d/ && \
+    yum update -y && \
     yum install -y \
         gcc \
         glibc-headers \
