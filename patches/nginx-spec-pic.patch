@@ -1,15 +1,22 @@
 --- nginx.spec
 +++ nginx.spec
-@@ -74,6 +74,8 @@
- Source12: COPYRIGHT
+@@ -93,6 +93,8 @@
+ Source12: nginx.copyright
  Source13: nginx.check-reload.sh
 
 +Patch1000: nginx-pic.patch
 +
- License: 2-clause BSD-like license
 
- BuildRoot: %{_tmppath}/%{name}-%{main_version}-%{main_release}-root
-@@ -97,6 +99,7 @@
+
+ License: 2-clause BSD-like license
+@@ -113,12 +115,13 @@
+ %endif
+
+ %prep
+-%autosetup -p1
++%setup -q
+ cp %{SOURCE2} .
+ sed -e 's|%%DEFAULTSTART%%|2 3 4 5|g' -e 's|%%DEFAULTSTOP%%|0 1 6|g' \
      -e 's|%%PROVIDES%%|nginx|g' < %{SOURCE2} > nginx.init
  sed -e 's|%%DEFAULTSTART%%||g' -e 's|%%DEFAULTSTOP%%|0 1 2 3 4 5 6|g' \
      -e 's|%%PROVIDES%%|nginx-debug|g' < %{SOURCE2} > nginx-debug.init
