@@ -1,10 +1,9 @@
 FROM centos:5
-MAINTAINER AIZAWA Hina <hina@bouhime.com>
+MAINTAINER AIZAWA Hina <hina@fetus.jp>
 ARG NGINX_VERSION=FILLME
-ARG NGINX_SRPM=FILLME
 ARG LIBRESSL_VERSION=FILLME
 ARG LIBRESSL_ARCHIVE=FILLME
-ARG PATCH_NAME=FILLME
+ARG SPEC_NAME=FILLME
 ENV HOME /
 COPY centos5/*.repo /tmp
 RUN rm -f /etc/yum.repos.d/*.repo && \
@@ -22,17 +21,12 @@ WORKDIR /usr/bin
 RUN ln -s gcc44 gcc && ln -s gcc44 cc
 USER builder
 WORKDIR /home/builder
-COPY archives/* /home/builder/
-COPY patches/*.patch /home/builder/
+COPY oldsys/ /usr/src/redhat/
+COPY archives/${LIBRESSL_ARCHIVE} /home/builder/
 USER root
 ENV HOME /home/builder
 RUN echo '%dist .el5.jp3cki' >> /home/builder/.rpmmacros && \
-    rpm -Uvh --nosignature --nomd5 ${NGINX_SRPM} && \
     tar -zxvf ${LIBRESSL_ARCHIVE}
-RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-el5.patch
-RUN patch -p0 -d /usr/src/redhat/SPECS < ${PATCH_NAME}
-RUN patch -p0 -d /usr/src/redhat/SPECS < nginx-spec-pic.patch
-RUN cp /home/builder/nginx-pic.patch /usr/src/redhat/SOURCES
-RUN rpmbuild -ba /usr/src/redhat/SPECS/nginx.spec && \
+RUN rpmbuild -ba /usr/src/redhat/SPECS/${SPEC_NAME} && \
     tar -czf /tmp/built.tar.gz -C /usr/src/redhat RPMS SRPMS
 CMD ["/bin/true"]

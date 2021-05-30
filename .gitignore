@@ -1,1 +1,4 @@
 *.build
+*.build-old
+oldsys/SOURCES/nginx-*.tar.gz
+oldsys/SPECS/nginx-*.spec
