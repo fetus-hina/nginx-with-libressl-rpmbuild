@@ -33,7 +33,7 @@
  %define _debugsource_template %{nil}
  %endif
 
-@@ -50,7 +43,6 @@
+@@ -50,19 +43,18 @@
  %define _debugsource_template %{nil}
  %global _hardened_build 1
  %define _group System Environment/Daemons
@@ -41,7 +41,13 @@
  Requires(pre): shadow-utils
  %endif
 
-@@ -62,7 +54,7 @@
+ # end of distribution specific definitions
+
+-%define base_version <<NGINX_VERSION>>
+-%define base_release 1%{?dist}.ngx
++%define base_version <<NGINX_VERSION>>
++%define base_release <<RPM_RELEASE>>%{?dist}.ngx
+
  %define bdir %{_builddir}/%{name}-%{base_version}
 
  %define WITH_CC_OPT $(echo %{optflags} $(pcre-config --cflags)) -fPIC
