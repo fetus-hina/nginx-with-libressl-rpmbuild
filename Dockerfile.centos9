@@ -1,4 +1,4 @@
-FROM rockylinux:8
+FROM rockylinux:9
 MAINTAINER AIZAWA Hina <hina@fetus.jp>
 ARG NGINX_VERSION=FILLME
 ARG NGINX_SRPM=FILLME
@@ -13,8 +13,8 @@ RUN dnf update -y && \
         make \
         pcre2-devel \
         perl \
-        redhat-lsb-core \
         rpm-build \
+        systemd \
         tar \
         zlib-devel && \
     dnf clean all && \
@@ -25,7 +25,7 @@ WORKDIR /home/builder
 COPY archives/* /home/builder/
 COPY patches/*.patch /home/builder/
 ENV HOME /home/builder/
-RUN echo '%dist .el8.ossl.jp3cki' >> /home/builder/.rpmmacros && \
+RUN echo '%dist .el9.ossl.jp3cki' >> /home/builder/.rpmmacros && \
     rpm -Uvh ${NGINX_SRPM} && \
     tar -zxvf ${OPENSSL_ARCHIVE}
 RUN patch -p0 -d /home/builder/rpmbuild/SPECS < ${PATCH_NAME}

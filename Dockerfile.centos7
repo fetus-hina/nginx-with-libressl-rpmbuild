@@ -8,10 +8,11 @@ ARG PATCH_NAME=FILLME
 ENV HOME /
 RUN yum update -y && \
     yum install -y \
-        glibc-headers \
         gcc \
+        glibc-headers \
         make \
-        pcre-devel \
+        pcre2-devel \
+        perl-IPC-Cmd \
         redhat-lsb-core \
         rpm-build \
         tar \
