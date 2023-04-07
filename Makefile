@@ -1,9 +1,9 @@
 # "mainline" or blank
 UPSTREAM_REPO :=
 
-NGINX_VERSION := 1.20.2
-LIBRESSL_VERSION := 3.4.3
-RPM_RELEASE := 2
+NGINX_VERSION := 1.22.1
+LIBRESSL_VERSION := 3.6.2
+RPM_RELEASE := 1
 
 NGINX_SRPM := nginx-$(NGINX_VERSION)-1.el7.ngx.src.rpm
 NGINX_TGZ := nginx-$(NGINX_VERSION).tar.gz
@@ -19,6 +19,7 @@ TARGZ_FILE := built.tar.gz
 PATCH_NAME := nginx-$(NGINX_VERSION)-$(RPM_RELEASE)-with-$(LIBRESSL_VERSION).patch
 SPEC_NAME := nginx-$(NGINX_VERSION)-$(RPM_RELEASE)-with-$(LIBRESSL_VERSION).spec
 
+centos9: IMAGE_NAME := $(IMAGE_NAME)-el9
 centos8: IMAGE_NAME := $(IMAGE_NAME)-el8
 centos7: IMAGE_NAME := $(IMAGE_NAME)-el7
 centos6: IMAGE_NAME := $(IMAGE_NAME)-el6
@@ -26,7 +27,8 @@ centos5: IMAGE_NAME := $(IMAGE_NAME)-el5
 
 .PHONY: all clean dist-clean centos7 centos6 centos5
 
-all: centos8 centos7 centos6 centos5
+all: centos9 centos8 centos7 centos6 centos5
+centos9: centos9.build
 centos8: centos8.build
 centos7: centos7.build
 centos6: centos6.build-old
@@ -98,6 +100,7 @@ oldsys/SPECS/$(SPEC_NAME): oldsys/SPECS/nginx.spec.in
 
 clean:
 	rm -rf *.build.bak *.build *.build-old tmp patches/*.patch
+	docker images | grep -q $(IMAGE_NAME)-el9 && docker rmi $(IMAGE_NAME)-el9 || true
 	docker images | grep -q $(IMAGE_NAME)-el8 && docker rmi $(IMAGE_NAME)-el8 || true
 	docker images | grep -q $(IMAGE_NAME)-el7 && docker rmi $(IMAGE_NAME)-el7 || true
 	docker images | grep -q $(IMAGE_NAME)-el6 && docker rmi $(IMAGE_NAME)-el6 || true

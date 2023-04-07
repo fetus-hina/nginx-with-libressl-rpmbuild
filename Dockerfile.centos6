@@ -13,7 +13,7 @@ RUN rm -f /etc/yum.repos.d/*.repo && \
         gcc \
         glibc-headers \
         make \
-        pcre-devel \
+        pcre2-devel \
         redhat-lsb-core \
         rpm-build \
         tar \

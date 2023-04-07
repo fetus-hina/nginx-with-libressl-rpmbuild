@@ -11,7 +11,7 @@ RUN yum update -y && \
         glibc-headers \
         gcc \
         make \
-        pcre-devel \
+        pcre2-devel \
         redhat-lsb-core \
         rpm-build \
         tar \
